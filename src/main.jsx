@@ -24,6 +24,9 @@ import Assignments from './components/Assignments/Assignments';
 import PendingAssignments from './components/PendingAssignments/PendingAssignments';
 import CreateAssignments from './components/CreateAssignments/CreateAssignments';
 import MyAttemptedAssignments from './components/MyAttemptedAssignments/MyAttemptedAssignments';
+import UpdateAssignment from './components/UpdateAssignment/UpdateAssignment';
+import ViewAssignment from './components/ViewAssignment/ViewAssignment';
+import AssignmentSubmission from './components/AssignmentSubmission/AssignmentSubmission';
 
 const router = createBrowserRouter([
   {
@@ -35,8 +38,25 @@ const router = createBrowserRouter([
     element: <Home /> // Home Page
   },
   {
+    path: "/assignments/:id",
+    element:  <ViewAssignment></ViewAssignment>
+  },
+  {
+    path: "/assignments/submit/:id",
+    element:  <AssignmentSubmission></AssignmentSubmission>
+  },
+  {
     path: "/howtohelp",
     element: <HowToHelp></HowToHelp> // Home Page
+  },
+  {
+    path: "/update/:id",
+    element: <UpdateAssignment></UpdateAssignment>// Home Page
+  },
+ 
+  {
+    path: "/view/:id",
+    element: <ViewAssignment></ViewAssignment>
   },
  
   {

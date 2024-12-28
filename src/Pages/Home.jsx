@@ -7,12 +7,16 @@ import { Outlet } from "react-router-dom"; // Import Outlet to render nested rou
 import Footer from "../Footer/Footer";
 import DonationStats from "../About/DonationStats";
 import SuccessStories from "../About/SuccessStories";
+import Features from "../components/Features/Features";
+import FAQ from "../components/FAQ/FAQ";
 
 const Home = () => {
   return (
     <div>
       <Navbar />    {/* Navbar */}
       <Banner />    {/* Banner */}
+      <Features></Features>
+      <FAQ></FAQ>
       <About />     {/* About */}
       <HowItWorks />{/* How it works section */}
       <DonationStats /> {/* Donation Stats Section */}
