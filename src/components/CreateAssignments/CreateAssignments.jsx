@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Navbar from '../Navbar/Navbar';
-import { auth, provider, signInWithPopup, signOut } from '../../firebase';  // Import Firebase auth methods
+import { auth, provider, signInWithPopup, signOut } from '../../firebase';
+import { toast } from 'react-toastify';
 
 const CreateAssignment = () => {
   const [title, setTitle] = useState('');
@@ -74,6 +75,7 @@ const CreateAssignment = () => {
       const data = await response.json();
 
       if (response.ok) {
+        toast.success('Assignment created successfully!');
         setSuccessMessage('Assignment created successfully!');
         setTimeout(() => setSuccessMessage(''), 3000);
 
@@ -83,12 +85,13 @@ const CreateAssignment = () => {
         setThumbnail('');
         setDifficulty('');
         setDueDate(null);
-        setCreatorEmail('');
       } else {
+        toast.error('Error: ' + data.message);
         alert('Error: ' + data.message);
       }
     } catch (error) {
       console.error('Error submitting assignment:', error);
+      toast.error('Something went wrong!');
       alert('Something went wrong!');
     } finally {
       setIsSubmitting(false);

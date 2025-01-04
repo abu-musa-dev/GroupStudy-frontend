@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../../firebase"; 
+import { auth } from "../../firebase";
 import { Toaster, toast } from "react-hot-toast";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const navigate = useNavigate();
   const location = useLocation();
   const [loginToastShown, setLoginToastShown] = useState(sessionStorage.getItem("loginToastShown") === "true");
@@ -33,6 +34,11 @@ const Navbar = () => {
     setLoginToastShown(true);
   }, [location.pathname]);
 
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -48,9 +54,13 @@ const Navbar = () => {
       });
   };
 
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
+
   return (
     <>
-      <div className="navbar bg-base-300 relative z-20 p-5 sticky top-0">
+      <div className={`navbar bg-base-300 relative z-20 p-5 sticky top-0 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
         <div className="flex-1">
           <button className="btn btn-ghost text-xl">GroupStudy</button>
         </div>
@@ -94,6 +104,14 @@ const Navbar = () => {
             <Link to="/login" className="btn btn-primary">Login</Link>
           )}
         </div>
+
+        {/* Theme Toggle Button */}
+        <button
+          onClick={toggleTheme}
+          className="btn btn-ghost"
+        >
+          {theme === "light" ? "Dark Mode" : "Light Mode"}
+        </button>
 
         {/* Mobile Menu */}
         <div className="dropdown dropdown-end md:hidden">
