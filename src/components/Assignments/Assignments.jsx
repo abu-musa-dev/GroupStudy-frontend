@@ -14,6 +14,7 @@ const Assignments = () => {
   const { currentUser } = useAuth();
   const currentUserEmail = currentUser?.email;
 
+  // Fetch all assignments on mount
   useEffect(() => {
     fetchAssignments();
   }, []);
@@ -37,23 +38,23 @@ const Assignments = () => {
   };
 
   const confirmDelete = () => {
-    fetch(
-      `http://localhost:5000/api/assignments/${assignmentToDelete}?currentUserEmail=${currentUserEmail}`,
-      {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      }
-    )
+    fetch(`http://localhost:5000/api/assignments/${assignmentToDelete}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUserEmail}`, // Include email for validation
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
-        if (data.message === "Assignment deleted successfully") {
+        if (data.success) {
           toast.success("Assignment deleted successfully");
-          fetchAssignments();
+          fetchAssignments(); // Refresh the assignments list
         } else {
           toast.error(data.message);
         }
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error("Error deleting assignment.");
       });
 
@@ -79,12 +80,25 @@ const Assignments = () => {
             >
               <h2 className="text-xl font-semibold text-gray-800">{assignment.title}</h2>
               <p className="text-gray-600">Marks: {assignment.marks}</p>
+              <p className="text-gray-600">Creator: {assignment.creatorEmail}</p>
               <div className="mt-4 flex justify-between">
                 <button
                   onClick={() => handleDeleteClick(assignment._id, assignment.creatorEmail)}
                   className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
                 >
                   Delete
+                </button>
+                <button
+                  onClick={() => navigate(`/update/${assignment._id}`)}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+                >
+                  Update
+                </button>
+                <button
+                  onClick={() => navigate(`/view/${assignment._id}`)}
+                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+                >
+                  View
                 </button>
               </div>
             </div>

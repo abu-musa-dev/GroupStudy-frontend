@@ -52,8 +52,9 @@ const router = createBrowserRouter([
   },
   {
     path: "/update/:id",
-    element: <UpdateAssignment></UpdateAssignment>// Home Page
+    element: <UpdateAssignment />
   },
+  
  
   {
     path: "/view/:id",
