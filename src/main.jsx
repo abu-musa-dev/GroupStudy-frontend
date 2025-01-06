@@ -27,6 +27,7 @@ import MyAttemptedAssignments from './components/MyAttemptedAssignments/MyAttemp
 import UpdateAssignment from './components/UpdateAssignment/UpdateAssignment';
 import ViewAssignment from './components/ViewAssignment/ViewAssignment';
 import AssignmentSubmission from './components/AssignmentSubmission/AssignmentSubmission';
+// import { UserProvider } from "./components/UserContext";  // Path অনুযায়ী ঠিক করুন
 
 const router = createBrowserRouter([
   {
@@ -61,7 +62,8 @@ const router = createBrowserRouter([
  
   {
     path: "/assignments",
-    element: <Assignments></Assignments> // Campaigns Page
+    element:  <Assignments />
+  
   },
   {
     path: "/pending-assignments",
