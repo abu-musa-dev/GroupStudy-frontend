@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+// import withReactContent from '@sweetalert2/react-content';
 import Navbar from "../Navbar/Navbar";
 
 const UpdateAssignment = () => {
@@ -17,7 +18,11 @@ const UpdateAssignment = () => {
         const fetchedAssignment = response.data;
         setAssignment(fetchedAssignment); // Automatically set the fetched data
       })
-      .catch(() => toast.error("Error fetching assignment"));
+      .catch(() => Swal.fire({
+        icon: 'error',
+        title: 'Error fetching assignment',
+        text: 'Unable to fetch assignment details!',
+      }));
   }, [id]);
 
   // Handle form submission to update the assignment
@@ -28,14 +33,24 @@ const UpdateAssignment = () => {
     const updatedAssignment = { ...assignment };
 
     axios
-      .put(`http://localhost:5000/api/assignments/${id}`, updatedAssignment) // Removed token header
+      .put(`http://localhost:5000/api/assignments/${id}`, updatedAssignment)
       .then(() => {
-        toast.success("Assignment updated successfully");
-        navigate("/assignments"); // Redirect to assignments page after success
+        Swal.fire({
+          icon: 'success',
+          title: 'Assignment updated successfully!',
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          navigate("/assignments"); // Redirect after showing the success message
+        });
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Error updating assignment");
+        Swal.fire({
+          icon: 'error',
+          title: 'Error updating assignment',
+          text: error.message || 'Something went wrong!',
+        });
       });
   };
 
