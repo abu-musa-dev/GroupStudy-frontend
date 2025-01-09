@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-// import withReactContent from '@sweetalert2/react-content';
 import Navbar from "../Navbar/Navbar";
 
 const UpdateAssignment = () => {
@@ -25,12 +24,47 @@ const UpdateAssignment = () => {
       }));
   }, [id]);
 
+  // Form validation function
+  const isFormValid = () => {
+    const { title, description, marks, difficulty, dueDate } = assignment;
+    // All fields must be filled out
+    if (!title || !description || !marks || !difficulty || !dueDate) {
+      return false;
+    }
+    // Marks should be a positive number
+    if (marks <= 0 || isNaN(marks)) {
+      return false;
+    }
+    // Difficulty should be one of the allowed values
+    const validDifficulties = ["easy", "medium", "hard"];
+    if (!validDifficulties.includes(difficulty.toLowerCase())) {
+      return false;
+    }
+    // Due date should be in the future
+    const currentDate = new Date();
+    const dueDateObj = new Date(dueDate);
+    if (dueDateObj < currentDate) {
+      return false;
+    }
+    return true;
+  };
+
   // Handle form submission to update the assignment
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Prepare updated assignment data
     const updatedAssignment = { ...assignment };
+
+    // Check if the form is valid
+    if (!isFormValid()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Form Validation Error',
+        text: 'Please fill all fields correctly!',
+      });
+      return;
+    }
 
     axios
       .put(`http://localhost:5000/api/assignments/${id}`, updatedAssignment)
@@ -61,17 +95,6 @@ const UpdateAssignment = () => {
       ...prevAssignment,
       [name]: value,
     }));
-  };
-
-  // Form validation
-  const isFormValid = () => {
-    return (
-      assignment.title &&
-      assignment.description &&
-      assignment.marks &&
-      assignment.difficulty &&
-      assignment.dueDate
-    );
   };
 
   return (

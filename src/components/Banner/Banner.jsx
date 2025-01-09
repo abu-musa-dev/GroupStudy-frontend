@@ -4,19 +4,19 @@ import "tailwindcss/tailwind.css";
 const Banner = () => {
   const slides = [
     {
-      url: "https://i.ibb.co/zFr5DcS/pexels-newmanphotographs-14831647.jpg",
-      title: "Support Winter Donation Campaign 1",
-      description: "Help us provide warm clothes to the needy this winter."
+      url: "https://i.ibb.co.com/4NX8Y4W/colleagues-studying-together-exam.jpg",
+      title: "Collaborative Learning",
+      description: "Study together, share knowledge, and grow as a team."
     },
     {
-      url: "https://i.ibb.co/zxdyy2q/pexels-kokorevas-11319521.jpg",
-      title: "Support Winter Donation Campaign 2",
-      description: "Join us in our mission to support the homeless."
+      url: "https://i.ibb.co.com/0p7R9Lc/young-people-working-laptop.jpg",
+      title: "Interactive Study Sessions",
+      description: "Engage with peers for a more effective and engaging study experience."
     },
     {
-      url: "https://i.ibb.co/ZKp8sXv/pexels-newmanphotographs-14831814.jpg",
-      title: "Support Winter Donation Campaign 3",
-      description: "Donate to provide hot meals and shelter."
+      url: "https://i.ibb.co.com/ykmMJQK/three-students-studying-using-tablet-chatting.jpg",
+      title: "Focused Group Discussions",
+      description: "Discuss key topics and solve problems together for better understanding."
     },
   ];
 
@@ -35,8 +35,11 @@ const Banner = () => {
               alt={slide.title}
             />
             <div className="absolute bottom-0 bg-gradient-to-t from-black via-transparent to-transparent w-full text-white p-6">
-              <h2 className="text-3xl font-semibold mb-2">{slide.title}</h2>
-              <p className="text-lg">{slide.description}</p>
+              {/* Grouping Title and Description */}
+              <div className="space-y-4">
+                <h2 className="text-3xl font-semibold mb-2">{slide.title}</h2>
+                <p className="text-lg">{slide.description}</p>
+              </div>
             </div>
             <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
               <a
@@ -60,5 +63,3 @@ const Banner = () => {
 };
 
 export default Banner;
-
-

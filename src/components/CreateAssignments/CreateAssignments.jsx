@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Navbar from '../Navbar/Navbar';
 import { auth, provider, signInWithPopup, signOut } from '../../firebase';
-import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 const CreateAssignment = () => {
   const [title, setTitle] = useState('');
@@ -46,11 +46,38 @@ const CreateAssignment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validation
     if (!title || !description || !marks || !thumbnail || !difficulty || !dueDate || !creatorEmail) {
-      alert('Please fill in all the fields.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'All fields are required!',
+      });
       return;
     }
 
+    // Validate marks: must be a positive number
+    if (marks <= 0 || isNaN(marks)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Marks',
+        text: 'Marks should be a positive number!',
+      });
+      return;
+    }
+
+    // Validate difficulty level: it must be one of the valid options
+    const validDifficulties = ['easy', 'medium', 'hard'];
+    if (!validDifficulties.includes(difficulty.toLowerCase())) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Difficulty Level',
+        text: 'Please select a valid difficulty level (easy, medium, or hard).',
+      });
+      return;
+    }
+
+    // Create new assignment
     const newAssignment = {
       title,
       description,
@@ -75,10 +102,15 @@ const CreateAssignment = () => {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success('Assignment created successfully!');
+        Swal.fire({
+          icon: 'success',
+          title: 'Assignment Created',
+          text: 'Assignment created successfully!',
+        });
         setSuccessMessage('Assignment created successfully!');
         setTimeout(() => setSuccessMessage(''), 3000);
 
+        // Clear form fields
         setTitle('');
         setDescription('');
         setMarks('');
@@ -86,13 +118,19 @@ const CreateAssignment = () => {
         setDifficulty('');
         setDueDate(null);
       } else {
-        toast.error('Error: ' + data.message);
-        alert('Error: ' + data.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: data.message || 'Something went wrong!',
+        });
       }
     } catch (error) {
       console.error('Error submitting assignment:', error);
-      toast.error('Something went wrong!');
-      alert('Something went wrong!');
+      Swal.fire({
+        icon: 'error',
+        title: 'Submission Error',
+        text: 'Something went wrong!',
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -108,17 +146,6 @@ const CreateAssignment = () => {
           <div className="bg-green-100 text-green-800 p-4 rounded-md mb-4">
             {successMessage}
           </div>
-        )}
-
-        {creatorEmail ? (
-          <div>
-            <p>Logged in as: {creatorEmail}</p>
-            <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded-md mt-4">Log Out</button>
-          </div>
-        ) : (
-          <button onClick={handleLogin} className="bg-blue-500 text-white px-6 py-2 rounded-md">
-            Log in with Google
-          </button>
         )}
 
         <form onSubmit={handleSubmit} className="mt-6">

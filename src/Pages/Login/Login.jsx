@@ -7,15 +7,41 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../Footer/Footer";
 
+// Login Component
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Email Validation
+  const validateEmail = (email) => {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return regex.test(email);
+  };
+
+  // Password Validation
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.{6,})/;
+    return regex.test(password);
+  };
+
   // Handle Login with Email & Password
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    // Validate Email and Password
+    if (!validateEmail(email)) {
+      setError("Invalid email format.");
+      toast.error("Please enter a valid email.");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setError("Password must be at least 6 characters, with an uppercase and a lowercase letter.");
+      toast.error("Password format is incorrect.");
+      return;
+    }
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -44,57 +70,57 @@ const Login = () => {
 
   return (
     <div>
-      <Navbar></Navbar>
+      <Navbar />
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Login to Your Account</h1>
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        
-        <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <p className="text-right text-sm text-blue-600 hover:underline cursor-pointer">
-            <a href="/forgot-password">Forgot Password?</a>
+        <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg">
+          <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Login to Your Account</h1>
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          
+          <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <p className="text-right text-sm text-blue-600 hover:underline cursor-pointer">
+              <a href="/forgot-password">Forgot Password?</a>
+            </p>
+            <button
+              type="submit"
+              className="w-full py-3 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              Login
+            </button>
+          </form>
+
+          <p className="mt-4 text-center text-sm text-gray-600">
+            Don't have an account? <a href="/register" className="text-blue-600 hover:underline">Register</a>
           </p>
-          <button
-            type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            Login
-          </button>
-        </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account? <a href="/register" className="text-blue-600 hover:underline">Register</a>
-        </p>
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={handleGoogleLogin}
+              className="w-full py-3 bg-red-500 text-white font-bold rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+            >
+              Login with Google
+            </button>
+          </div>
 
-        <div className="mt-6 flex justify-center">
-          <button
-            onClick={handleGoogleLogin}
-            className="w-full py-3 bg-red-500 text-white font-bold rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-          >
-            Login with Google
-          </button>
+          <Toaster />
         </div>
-
-        <Toaster />
       </div>
-    </div>
-    <Footer></Footer>
+      <Footer />
     </div>
   );
 };

@@ -1,30 +1,48 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import axios from "axios";
+import Swal from "sweetalert2"; // Import SweetAlert2
+import { useAuth } from "../../contexts/AuthContext"; // Correct import path
 
 const AssignmentSubmission = () => {
   const { id } = useParams(); // Retrieve the assignment ID from URL
   const [googleDocLink, setGoogleDocLink] = useState("");
   const [note, setNote] = useState("");
-  const [currentUserEmail, setCurrentUserEmail] = useState("user@example.com"); // Placeholder for current user email
+  const { currentUser } = useAuth(); // Access currentUser from context
 
   // Handle submission of the assignment
   const handleSubmitAssignment = () => {
+    if (!googleDocLink || !note || !currentUser?.email) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please fill in all fields.",
+      });
+      return;
+    }
+
     const submission = {
       googleDocLink,
       note,
       status: "pending", // Set the status as pending by default
-      userEmail: currentUserEmail,
+      userEmail: currentUser.email, // Using currentUser's email
     };
-
+    console.log('Submission:', submission); 
     axios
       .post(`http://localhost:5000/api/assignments/submit/${id}`, submission)
       .then((response) => {
-        toast.success("Assignment submitted successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Assignment submitted successfully!",
+        });
       })
       .catch((error) => {
-        toast.error("Error submitting assignment.");
+        Swal.fire({
+          icon: "error",
+          title: "Error!",
+          text: "Error submitting assignment.",
+        });
       });
   };
 
