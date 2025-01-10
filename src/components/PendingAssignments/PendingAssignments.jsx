@@ -1,38 +1,53 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../../contexts/AuthContext"; // Import AuthContext
+import { useAuth } from "../../contexts/AuthContext";
 import Swal from "sweetalert2"; // For alerts
 
 const PendingAssignments = () => {
-  const { currentUser } = useAuth(); // Get current user
+  const { currentUser } = useAuth();
   const [assignments, setAssignments] = useState([]); // Store pending assignments
-  const [selectedAssignment, setSelectedAssignment] = useState(null); // Store selected assignment for marking
-  const [marks, setMarks] = useState(""); // Marks input
-  const [feedback, setFeedback] = useState(""); // Feedback input
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [marks, setMarks] = useState("");
+  const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(true); // Loading state
 
-  const currentUserEmail = currentUser?.email; // Get current user's email
+  const currentUserEmail = currentUser?.email; // Get the email of the current user
 
   // Fetch pending assignments
   useEffect(() => {
-    fetch('http://localhost:5000/api/assignments/pending')
-      .then((response) => response.json())
+    if (!currentUserEmail) return; // Prevent fetching if the user is not logged in
+
+    setLoading(true); // Set loading state before fetching
+    fetch(`http://localhost:5000/api/submissions?status=pending`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch pending assignments");
+        }
+        return response.json();
+      })
       .then((data) => {
-        console.log(data); // Log the data to check its type and structure
         if (Array.isArray(data)) {
-          // Proceed with filter if data is an array
-          const filteredData = data.filter(/* your filter logic here */);
-          setAssignments(filteredData);
+          setAssignments(data); // Update the state with the fetched assignments
         } else {
-          console.error("Expected data to be an array, but got", typeof data);
+          console.error("Expected data array");
         }
       })
-      .catch((error) => console.error("Error fetching assignments:", error));
-  }, []);
-  
+      .catch((error) => {
+        console.error("Error fetching assignments:", error);
+      })
+      .finally(() => setLoading(false)); // Turn off loading state
+  }, [currentUserEmail]); // Re-run this effect when the email changes
 
   // Handle "Give Mark" button click
   const handleGiveMark = (assignment) => {
-    setSelectedAssignment(assignment);
+    if (assignment.userEmail !== currentUserEmail) {
+      setSelectedAssignment(assignment); // Open modal to give marks if it's not the current user's assignment
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "You cannot mark your own assignment.",
+      });
+    }
   };
 
   // Handle mark submission
@@ -49,12 +64,12 @@ const PendingAssignments = () => {
     const updatedAssignment = {
       marks,
       feedback,
-      status: "completed", // Update status to completed
+      status: "completed",
     };
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token"); // Get the token for authorization
 
-    fetch(`http://localhost:5000/api/assignments/${Assignment._id}`, {
+    fetch(`http://localhost:5000/api/assignments/${selectedAssignment._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -71,10 +86,10 @@ const PendingAssignments = () => {
           });
           setAssignments((prev) =>
             prev.filter((assignment) => assignment._id !== selectedAssignment._id)
-          );
-          setSelectedAssignment(null);
-          setMarks("");
-          setFeedback("");
+          ); // Remove the assignment from the list
+          setSelectedAssignment(null); // Close the modal
+          setMarks(""); // Reset marks input
+          setFeedback(""); // Reset feedback input
         } else {
           throw new Error("Failed to update assignment.");
         }
@@ -86,7 +101,7 @@ const PendingAssignments = () => {
           title: "Error!",
           text: "Something went wrong while submitting marks.",
         });
-      }); 
+      });
   };
 
   return (

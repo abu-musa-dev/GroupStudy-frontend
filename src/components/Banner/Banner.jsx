@@ -4,17 +4,17 @@ import "tailwindcss/tailwind.css";
 const Banner = () => {
   const slides = [
     {
-      url: "https://i.ibb.co.com/4NX8Y4W/colleagues-studying-together-exam.jpg",
+      url: "https://i.postimg.cc/9fqkQWVM/colleagues-studying-together-exam.jpg",
       title: "Collaborative Learning",
       description: "Study together, share knowledge, and grow as a team."
     },
     {
-      url: "https://i.ibb.co.com/0p7R9Lc/young-people-working-laptop.jpg",
+      url: "https://i.postimg.cc/NFQCDmX9/three-students-studying-using-tablet-chatting.jpg",
       title: "Interactive Study Sessions",
       description: "Engage with peers for a more effective and engaging study experience."
     },
     {
-      url: "https://i.ibb.co.com/ykmMJQK/three-students-studying-using-tablet-chatting.jpg",
+      url: "https://i.postimg.cc/nrTRPrKd/young-people-working-laptop.jpg",
       title: "Focused Group Discussions",
       description: "Discuss key topics and solve problems together for better understanding."
     },
