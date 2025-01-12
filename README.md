@@ -22,9 +22,3 @@ This project is the frontend part of an Online Group Study web application built
 - **React-Modal** for modals.
 - **Styled Components** for CSS-in-JS styling.
 
-## Setup Instructions:
-
-### 1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/frontend-repo.git
-cd frontend-repo
