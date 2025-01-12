@@ -210,6 +210,7 @@ const CreateAssignment = () => {
               onChange={(date) => setDueDate(date)}
               dateFormat="yyyy/MM/dd"
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholderText="Select a date"
             />
           </div>
 

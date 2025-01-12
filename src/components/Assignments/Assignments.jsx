@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import { useAuth } from "../../contexts/AuthContext";
+import Footer from "../../Footer/Footer";
 
 const Assignments = () => {
   const [assignments, setAssignments] = useState([]);
@@ -27,7 +28,12 @@ const Assignments = () => {
     if (searchTerm) query.append("search", searchTerm);
 
     fetch(`http://localhost:5000/api/assignments?${query.toString()}`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch assignments");
+        }
+        return response.json();
+      })
       .then((data) => setAssignments(data))
       .catch((error) => {
         toast.error("Error fetching assignments");
@@ -51,21 +57,15 @@ const Assignments = () => {
         Authorization: `Bearer ${currentUserEmail}`, // Include email for validation
       },
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          toast.success("Assignment deleted successfully");
-          fetchAssignments(); // Refresh the assignments list
-        } else {
-          toast.error(data.message);
-        }
+      .then(() => {
+        toast.success("Assignment deleted successfully");
+        setDeleteModalOpen(false);  // Close modal after deletion
+        setAssignmentToDelete(null); // Clear the assignment to delete
+        window.location.reload();  // Reload the page
       })
       .catch(() => {
         toast.error("Error deleting assignment.");
       });
-
-    setDeleteModalOpen(false);
-    setAssignmentToDelete(null);
   };
 
   const cancelDelete = () => {
@@ -76,7 +76,7 @@ const Assignments = () => {
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold text-center mb-6">Assignments</h1>
 
         {/* Filter and Search Section */}
@@ -162,6 +162,7 @@ const Assignments = () => {
           </div>
         )}
       </div>
+      <Footer></Footer>
     </div>
   );
 };
