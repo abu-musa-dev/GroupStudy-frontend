@@ -68,15 +68,28 @@ const router = createBrowserRouter([
   },
   {
     path: "/pending-assignments",
-    element: <PendingAssignments></PendingAssignments> // Campaigns Page
+    element: (
+      <PrivateRoute>
+        <PendingAssignments></PendingAssignments>
+      </PrivateRoute>
+    ) // Ca // Campaigns Page
   },
   {
     path: "/create-assignments",
-    element: <CreateAssignments></CreateAssignments> // Campaigns Page
+    element: (
+      <PrivateRoute>
+        <CreateAssignments></CreateAssignments>
+      </PrivateRoute>
+    ) 
+    // Campaigns Page
   },
   {
     path: "/my-attempted-assignments",
-    element: <MyAttemptedAssignments></MyAttemptedAssignments> // Campaigns Page
+    element: (
+      <PrivateRoute>
+        <MyAttemptedAssignments></MyAttemptedAssignments>
+      </PrivateRoute>
+    )  // Campaigns Page
   },
   {
     path: "/campaigns/:id",

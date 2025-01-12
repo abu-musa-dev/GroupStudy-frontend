@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import Swal from "sweetalert2"; // For alerts
 import Navbar from "../Navbar/Navbar";
+import Footer from "../../Footer/Footer";
 
 const PendingAssignments = () => {
   const { currentUser } = useAuth();
@@ -222,6 +223,7 @@ const PendingAssignments = () => {
         </div>
       )}
     </div>
+    <Footer></Footer>
    </div>
   );
 };

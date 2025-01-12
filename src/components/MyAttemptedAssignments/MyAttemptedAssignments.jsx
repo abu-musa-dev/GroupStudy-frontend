@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext'; // AuthContext থেকে useAuth ইমপোর্ট করা
+import Footer from '../../Footer/Footer';
+import Navbar from '../Navbar/Navbar';
 
 const MyAttemptedAssignments = () => {
   const [assignments, setAssignments] = useState([]);
@@ -26,7 +28,9 @@ const MyAttemptedAssignments = () => {
   }, [currentUserEmail]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div>
+      <Navbar></Navbar>
+      <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-6">My Attempted Assignments</h1>
       {loading ? (
         <div className="text-center text-gray-500">Loading...</div>
@@ -70,6 +74,8 @@ const MyAttemptedAssignments = () => {
           </table>
         </div>
       )}
+    </div>
+    <Footer></Footer>
     </div>
   );
 };

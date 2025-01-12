@@ -11,7 +11,7 @@ const CreateAssignment = () => {
   const [marks, setMarks] = useState('');
   const [thumbnail, setThumbnail] = useState('');
   const [difficulty, setDifficulty] = useState('');
-  const [dueDate, setDueDate] = useState(null);
+  const [dueDate, setDueDate] = useState(null);  // Only declare this once
   const [creatorEmail, setCreatorEmail] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
