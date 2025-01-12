@@ -128,8 +128,8 @@ const PendingAssignments = () => {
               {assignments.length > 0 ? (
                 assignments.map((assignment) => (
                   <tr key={assignment._id} className="border-b hover:bg-gray-50">
-                    <td className="py-4 px-6 text-sm text-gray-800">{assignment.title}</td>
-                    <td className="py-4 px-6 text-sm text-gray-800">{assignment.userEmail}</td>
+<td className="py-4 px-6 text-sm text-gray-800">{assignment.assignmentTitle}</td>
+<td className="py-4 px-6 text-sm text-gray-800">{assignment.userEmail}</td>
                     <td className="py-4 px-6 text-sm text-gray-800">
                       {assignment.marks || "Not yet marked"}
                     </td>

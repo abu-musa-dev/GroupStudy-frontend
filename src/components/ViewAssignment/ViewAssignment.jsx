@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom"; // useNavigate for redirect
 import { toast } from "react-toastify";
+import Navbar from "../Navbar/Navbar";
 
 const ViewAssignment = () => {
   const { id } = useParams(); // Retrieve the assignment ID from URL
@@ -28,7 +29,9 @@ const ViewAssignment = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div>
+      <Navbar></Navbar>
+      <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-6">{assignment.title}</h1>
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <img
@@ -49,6 +52,7 @@ const ViewAssignment = () => {
           Take Assignment
         </button>
       </div>
+    </div>
     </div>
   );
 };
