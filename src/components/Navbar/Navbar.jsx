@@ -64,7 +64,7 @@ const Navbar = ({ theme, toggleTheme }) => {
               <Link to="/my-attempted-assignments" className="btn btn-ghost">My Attempted Assignments</Link>
             </>
           )}
-
+///////
           {user ? (
             <div className="flex items-center space-x-2">
               <div className="dropdown dropdown-end">
