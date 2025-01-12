@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import Swal from "sweetalert2"; // For alerts
+import Navbar from "../Navbar/Navbar";
 
 const PendingAssignments = () => {
   const { currentUser } = useAuth();
@@ -105,7 +106,9 @@ const PendingAssignments = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+   <div>
+    <Navbar></Navbar>
+     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-6">Pending Assignments</h1>
       {loading ? (
         <div className="text-center text-gray-500">Loading...</div>
@@ -156,9 +159,11 @@ const PendingAssignments = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded shadow-md w-96">
             <h2 className="text-xl font-bold mb-4">Mark Assignment</h2>
+            {/* Assignment Title */}
             <p>
-              <strong>Title:</strong> {selectedAssignment.title}
+              <strong>Assignment Title:</strong> {selectedAssignment.title}
             </p>
+
             <p>
               <strong>Google Docs Link:</strong>{" "}
               <a
@@ -174,6 +179,7 @@ const PendingAssignments = () => {
               <strong>Notes:</strong> {selectedAssignment.note}
             </p>
 
+            {/* Marks Input */}
             <div className="mb-4">
               <label className="block text-gray-700">Marks: </label>
               <input
@@ -186,6 +192,7 @@ const PendingAssignments = () => {
               />
             </div>
 
+            {/* Feedback Input */}
             <div className="mb-4">
               <label className="block text-gray-700">Feedback: </label>
               <textarea
@@ -196,6 +203,7 @@ const PendingAssignments = () => {
               ></textarea>
             </div>
 
+            {/* Buttons */}
             <div className="flex justify-end">
               <button
                 onClick={handleMarkSubmit}
@@ -214,6 +222,7 @@ const PendingAssignments = () => {
         </div>
       )}
     </div>
+   </div>
   );
 };
 

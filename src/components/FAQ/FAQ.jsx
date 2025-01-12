@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 // FAQ Item Component
 const FaqItem = ({ question, answer }) => {
@@ -22,7 +22,7 @@ const FaqItem = ({ question, answer }) => {
 };
 
 // Main FAQ Section Component
-const FAQ = () => {
+const FAQ = ({ theme }) => {
   const faqs = [
     {
       question: "How do I create an assignment?",
@@ -52,7 +52,11 @@ const FAQ = () => {
   ];
 
   return (
-    <section className="py-16 bg-gray-100">
+    <section
+      className={`py-16 ${
+        theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-100 text-black"
+      }`}
+    >
       <div className="max-w-screen-xl mx-auto px-4 text-center">
         <h2 className="text-3xl font-bold mb-12">Frequently Asked Questions</h2>
         <div className="space-y-6">

@@ -4,9 +4,8 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import { Toaster, toast } from "react-hot-toast";
 
-const Navbar = () => {
+const Navbar = ({ theme, toggleTheme }) => {
   const [user, setUser] = useState(null);
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const navigate = useNavigate();
   const location = useLocation();
   const [loginToastShown, setLoginToastShown] = useState(sessionStorage.getItem("loginToastShown") === "true");
@@ -34,11 +33,6 @@ const Navbar = () => {
     setLoginToastShown(true);
   }, [location.pathname]);
 
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -52,10 +46,6 @@ const Navbar = () => {
         console.error("Logout failed: ", error);
         toast.error("Logout failed! Please try again.", { duration: 8000, position: "top-center" });
       });
-  };
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
   return (
