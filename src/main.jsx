@@ -8,7 +8,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"; // To de
 
 // Importing all the necessary pages and components for the routes
 import Home from "./Pages/Home";
-import Details from "./components/Details/Details";
 import Login from "./Pages/Login/Login";
 import NotFound from "./Pages/NotFound/NotFound";
 import Register from "./Pages/Login/Register";
@@ -83,14 +82,6 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <MyAttemptedAssignments></MyAttemptedAssignments>
-      </PrivateRoute>
-    ), 
-  },
-  {
-    path: "/campaigns/:id", // Route for viewing campaign details (Protected)
-    element: (
-      <PrivateRoute>
-        <Details />
       </PrivateRoute>
     ), 
   },
