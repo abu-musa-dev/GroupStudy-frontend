@@ -22,3 +22,4 @@ This project is the frontend part of an Online Group Study web application built
 - **React-Modal** for modals.
 - **Styled Components** for CSS-in-JS styling.
 
+"# GroupStudy-frontend-" 
