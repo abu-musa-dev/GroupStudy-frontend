@@ -1,127 +1,152 @@
 import React, { useState } from "react";
-import { auth } from "../../firebase";  // Ensure Firebase auth is properly imported
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { Toaster, toast } from "react-hot-toast";
+import { auth } from "../../firebase";
+import {
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { Toaster, toast } from "react-hot-toast";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../Footer/Footer";
+import { FcGoogle } from "react-icons/fc";
 
-// Login Component
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Email Validation
-  const validateEmail = (email) => {
-    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    return regex.test(email);
+  const validateEmail = (email) =>
+    /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email);
+
+  const validatePassword = (password) =>
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.{6,})/.test(password);
+
+  // ✅ Function to fetch and store JWT
+  const getJWTAndNavigate = async (userEmail) => {
+    try {
+      const res = await fetch("http://localhost:5000/jwt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: userEmail }),
+      });
+
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        toast.success("Login successful!");
+        navigate("/home");
+      } else {
+        toast.error("JWT token not received.");
+      }
+    } catch (error) {
+      toast.error("Failed to get JWT token");
+    }
   };
 
-  // Password Validation
-  const validatePassword = (password) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.{6,})/;
-    return regex.test(password);
-  };
-
-  // Handle Login with Email & Password
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    // Validate Email and Password
     if (!validateEmail(email)) {
       setError("Invalid email format.");
       toast.error("Please enter a valid email.");
       return;
     }
-
     if (!validatePassword(password)) {
-      setError("Password must be at least 6 characters, with an uppercase and a lowercase letter.");
+      setError("Password must be at least 6 characters, include uppercase and lowercase.");
       toast.error("Password format is incorrect.");
       return;
     }
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      toast.success("Login Successful!");
-      navigate("/home");  // Navigate to home page after successful login
-    } catch (error) {
-      setError(error.message);  // Set the error message to state
-      toast.error("Login failed! Please check your credentials.");
+      await getJWTAndNavigate(userCredential.user.email);
+    } catch (err) {
+      setError(err.message);
+      toast.error("Login failed. Check your credentials.");
     }
   };
 
-  // Handle Login with Google
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      toast.success("Google Login Successful!");
-      navigate("/home");  // Navigate to home page after successful Google login
-    } catch (error) {
-      toast.error("Google Login failed! Please try again.");
-      console.log(error.message);  // Log error for debugging
+      await getJWTAndNavigate(result.user.email);
+    } catch (err) {
+      toast.error("Google Login failed. Try again.");
     }
   };
 
   return (
-    <div>
+    <>
       <Navbar />
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg">
-          <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Login to Your Account</h1>
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-          
-          <form onSubmit={handleLogin}>
-            <input
-              type="email"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <p className="text-right text-sm text-blue-600 hover:underline cursor-pointer">
-              <a href="/forgot-password">Forgot Password?</a>
-            </p>
-            <button
-              type="submit"
-              className="w-full py-3 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Login
-            </button>
-          </form>
-
-          <p className="mt-4 text-center text-sm text-gray-600">
-            Don't have an account? <a href="/register" className="text-blue-600 hover:underline">Register</a>
-          </p>
-
-          <div className="mt-6 flex justify-center">
-            <button
-              onClick={handleGoogleLogin}
-              className="w-full py-3 bg-red-500 text-white font-bold rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-            >
-              Login with Google
-            </button>
+      <div className="min-h-screen bg-gradient-to-r from-gray-100 to-white flex items-center justify-center px-4">
+        <div className="flex flex-col lg:flex-row w-full max-w-5xl bg-white shadow-xl rounded-xl overflow-hidden">
+          {/* Left illustration or branding */}
+          <div className="lg:w-1/2 hidden lg:flex items-center justify-center bg-blue-600 text-white p-10">
+            <div className="text-center">
+              <h2 className="text-4xl font-bold mb-4">Welcome Back!</h2>
+              <p className="text-lg">Start collaborating and learning today.</p>
+            </div>
           </div>
 
-          <Toaster />
+          {/* Login Form */}
+          <div className="w-full lg:w-1/2 p-8 sm:p-10">
+            <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Login</h1>
+            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <input
+                type="email"
+                placeholder="Email"
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <div className="flex justify-between text-sm">
+                <a href="/forgot-password" className="text-blue-600 hover:underline">
+                  Forgot Password?
+                </a>
+              </div>
+              <button
+                type="submit"
+                className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-300"
+              >
+                Login
+              </button>
+            </form>
+
+            <p className="mt-4 text-center text-sm text-gray-600">
+              Don't have an account?{" "}
+              <a href="/register" className="text-blue-600 hover:underline">
+                Register here
+              </a>
+            </p>
+
+            <div className="mt-6">
+              <button
+                onClick={handleGoogleLogin}
+                className="flex items-center justify-center w-full py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition"
+              >
+                <FcGoogle size={24} className="mr-2" />
+                <span className="font-medium text-gray-700">Login with Google</span>
+              </button>
+            </div>
+            <Toaster />
+          </div>
         </div>
       </div>
       <Footer />
-    </div>
+    </>
   );
 };
 

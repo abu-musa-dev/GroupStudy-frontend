@@ -12,7 +12,7 @@ const ViewAssignment = () => {
   // Fetch the assignment details by ID
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/assignments/${id}`)
+      .get(`http://localhost:5000/assignments/${id}`)
       .then((response) => {
         setAssignment(response.data);
       })

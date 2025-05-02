@@ -1,142 +1,123 @@
 // src/index.js
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import './index.css';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { StrictMode } from "react"; // Importing StrictMode to highlight potential issues in development
+import { createRoot } from "react-dom/client"; // To create and render the root React element
+import "./index.css"; // Importing the main stylesheet for the project
+import { BrowserRouter as Router } from "react-router-dom"; // Importing BrowserRouter for routing functionality
+import { AuthProvider } from "./contexts/AuthContext"; // Context provider to manage user authentication state
+import { createBrowserRouter, RouterProvider } from "react-router-dom"; // To define and use routes
 
-import Home from './Pages/Home';
-import Campaigns from './components/Campaigns/Campaigns';
-import Details from './components/Details/Details';
-import Login from './Pages/Login/Login';
-import NotFound from './Pages/NotFound/NotFound';
-import Register from './Pages/Login/Register';
-import Dashboard from './Dashboard/Dashboard'
-import UpdateProfile from './components/UpdateProfile/UpdateProfile';
-import PrivateRoute from './components/PrivateRoute/PrivateRoute';
-import ForgotPassword from './Pages/Login/ForgotPassword';
-import HowToHelp from './components/HowtoHelp/HowtoHelp';
-import Assignments from './components/Assignments/Assignments';
-import PendingAssignments from './components/PendingAssignments/PendingAssignments';
-import CreateAssignments from './components/CreateAssignments/CreateAssignments';
-import MyAttemptedAssignments from './components/MyAttemptedAssignments/MyAttemptedAssignments';
-import UpdateAssignment from './components/UpdateAssignment/UpdateAssignment';
-import ViewAssignment from './components/ViewAssignment/ViewAssignment';
-import AssignmentSubmission from './components/AssignmentSubmission/AssignmentSubmission';
-// import { UserProvider } from "./components/UserContext";  // Path অনুযায়ী ঠিক করুন
+// Importing all the necessary pages and components for the routes
+import Home from "./Pages/Home";
+import Details from "./components/Details/Details";
+import Login from "./Pages/Login/Login";
+import NotFound from "./Pages/NotFound/NotFound";
+import Register from "./Pages/Login/Register";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute"; // Protected route component
+import ForgotPassword from "./Pages/Login/ForgotPassword";
+import Assignments from "./components/Assignments/Assignments";
+import PendingAssignments from "./components/PendingAssignments/PendingAssignments";
+import CreateAssignments from "./components/CreateAssignments/CreateAssignments";
+import MyAttemptedAssignments from "./components/MyAttemptedAssignments/MyAttemptedAssignments";
+import UpdateAssignment from "./components/UpdateAssignment/UpdateAssignment";
+import ViewAssignment from "./components/ViewAssignment/ViewAssignment";
+import AssignmentSubmission from "./components/AssignmentSubmission/AssignmentSubmission";
 
+// Define routes using createBrowserRouter for routing
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home /> // Home Page
+    path: "/", // Home page
+    element: <Home />, 
   },
   {
-    path: "/home",
-    element: <Home /> // Home Page
+    path: "/home", // Home page (duplicate of root path)
+    element: <Home />,
   },
   {
-    path: "/assignments/:id",
-    element:  <ViewAssignment></ViewAssignment>
+    path: "/assignments/:id", // Route to view a specific assignment by ID
+    element: <ViewAssignment></ViewAssignment>,
   },
   {
-    path: "/assignments/submit/:id",
-    element:  <AssignmentSubmission></AssignmentSubmission>
+    path: "/assignments/submit/:id", // Route for submitting an assignment by ID
+    element: <AssignmentSubmission></AssignmentSubmission>,
+  },
+
+  {
+    path: "/update/:id", // Route for updating an assignment by ID (Protected)
+    element: (
+      <PrivateRoute> 
+        <UpdateAssignment />
+      </PrivateRoute>
+    ),
+  },
+
+  {
+    path: "/assignments", // Route for displaying all assignments
+    element: <Assignments />,
   },
   {
-    path: "/howtohelp",
-    element: <HowToHelp></HowToHelp> // Home Page
+    path: "/view/:id", // Route to view a specific assignment (Protected)
+    element: (
+      <PrivateRoute>
+        <ViewAssignment></ViewAssignment>
+      </PrivateRoute>
+    ),
   },
   {
-    path: "/update/:id",
-    element: <UpdateAssignment />
-  },
-  
- 
-  {
-    path: "/view/:id",
-    element: <ViewAssignment></ViewAssignment>
-  },
- 
-  {
-    path: "/assignments",
-    element:  <Assignments />
-  
-  },
-  {
-    path: "/pending-assignments",
+    path: "/pending-assignments", // Route to show pending assignments (Protected)
     element: (
       <PrivateRoute>
         <PendingAssignments></PendingAssignments>
       </PrivateRoute>
-    ) // Ca // Campaigns Page
+    ), 
   },
   {
-    path: "/create-assignments",
+    path: "/create-assignments", // Route to create new assignments (Protected)
     element: (
       <PrivateRoute>
         <CreateAssignments></CreateAssignments>
       </PrivateRoute>
-    ) 
-    // Campaigns Page
+    ),
   },
   {
-    path: "/my-attempted-assignments",
+    path: "/my-attempted-assignments", // Route to view the user's attempted assignments (Protected)
     element: (
       <PrivateRoute>
         <MyAttemptedAssignments></MyAttemptedAssignments>
       </PrivateRoute>
-    )  // Campaigns Page
+    ), 
   },
   {
-    path: "/campaigns/:id",
+    path: "/campaigns/:id", // Route for viewing campaign details (Protected)
     element: (
       <PrivateRoute>
         <Details />
       </PrivateRoute>
-    ) // Campaign Details Page
+    ), 
   },
   {
-    path: "/login",
-    element: <Login /> // Login Page
+    path: "/login", // Login page
+    element: <Login />, 
   },
   {
-    path: "/register",
-    element: <Register /> // Register Page
+    path: "/register", // Register page
+    element: <Register />, 
   },
   {
-    path: "/forgot-password",
-    element: <ForgotPassword></ForgotPassword>// Register Page
+    path: "/forgot-password", // Forgot password page
+    element: <ForgotPassword></ForgotPassword>, 
   },
+
   {
-    path: "/dashboard",
-    element: (
-      <PrivateRoute>
-        <Dashboard />
-      </PrivateRoute>
-    ) // Dashboard Page
-  },
-  {
-    path: "/update-profile",
-    element: (
-      <PrivateRoute>
-        <UpdateProfile />
-      </PrivateRoute>
-    ) // Update Profile Page
-  },
-  {
-    path: "*", // Invalid Routes
-    element: <NotFound /> // 404 Page
+    path: "*", // Wildcard for invalid routes (404 page)
+    element: <NotFound />, // 404 NotFound page
   },
 ]);
 
-createRoot(document.getElementById('root')).render(
+// Render the application using StrictMode to highlight issues in development
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
+    <AuthProvider> {/* Provide authentication context to the whole app */}
+      <RouterProvider router={router} /> {/* Provide the router with defined routes */}
     </AuthProvider>
   </StrictMode>
 );

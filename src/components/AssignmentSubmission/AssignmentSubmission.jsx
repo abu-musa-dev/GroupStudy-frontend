@@ -15,7 +15,7 @@ const AssignmentSubmission = () => {
   // Fetch assignment details by ID
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/assignments/${id}`) // Replace with your API endpoint
+      .get(`https://group-study-delta.vercel.app/assignments/${id}`) // Replace with your API endpoint
       .then((response) => {
         const { title } = response.data; // Assuming API response contains `title`
         setAssignmentTitle(title);
@@ -49,7 +49,7 @@ const AssignmentSubmission = () => {
     };
 
     axios
-      .post(`http://localhost:5000/api/assignments/submit/${id}`, submission)
+      .post(`https://group-study-delta.vercel.app/assignments/submit/${id}`, submission)
       .then((response) => {
         Swal.fire({
           icon: "success",

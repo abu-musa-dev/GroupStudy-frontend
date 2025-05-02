@@ -50,9 +50,9 @@ const Navbar = ({ theme, toggleTheme }) => {
 
   return (
     <>
-      <div className={`navbar bg-base-300 relative z-20 p-5 sticky top-0 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
+      <div className={`navbar bg-gradient-to-br from-blue-50 to-blue-100 bg-base-300 relative z-20 p-5 sticky top-0 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
         <div className="flex-1">
-          <button className="btn btn-ghost text-xl">GroupStudy</button>
+         <Link to="/"> <button className="btn btn-ghost text-xl">GroupStudy</button></Link>
         </div>
         <div className="flex-none hidden md:flex space-x-4">
           <Link to="/" className="btn btn-ghost">Home</Link>
@@ -64,7 +64,7 @@ const Navbar = ({ theme, toggleTheme }) => {
               <Link to="/my-attempted-assignments" className="btn btn-ghost">My Attempted Assignments</Link>
             </>
           )}
-///////
+
           {user ? (
             <div className="flex items-center space-x-2">
               <div className="dropdown dropdown-end">
@@ -100,7 +100,7 @@ const Navbar = ({ theme, toggleTheme }) => {
           onClick={toggleTheme}
           className="btn btn-ghost"
         >
-          {theme === "light" ? "Dark Mode" : "Light Mode"}
+          {/* {theme === "light" ? "Dark Mode" : "Light Mode"} */}
         </button>
 
         {/* Mobile Menu */}

@@ -12,7 +12,7 @@ const UpdateAssignment = () => {
   // Fetch assignment details by ID
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/assignments/${id}`)
+      .get(`https://group-study-delta.vercel.app/assignments/${id}`)
       .then((response) => {
         const fetchedAssignment = response.data;
         setAssignment(fetchedAssignment); // Automatically set the fetched data
@@ -67,7 +67,7 @@ const UpdateAssignment = () => {
     }
 
     axios
-      .put(`http://localhost:5000/api/assignments/${id}`, updatedAssignment)
+      .put(`https://group-study-delta.vercel.app/assignments/${id}`, updatedAssignment)
       .then(() => {
         Swal.fire({
           icon: 'success',

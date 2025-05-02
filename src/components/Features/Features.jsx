@@ -1,48 +1,62 @@
 import React from "react";
 
-// FeatureCard component for individual features
-const FeatureCard = ({ title, description, icon }) => (
-  <div className="card bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl p-6 rounded-lg flex flex-col items-center text-center transition duration-300 ease-in-out transform hover:scale-105">
-    <div className="text-5xl text-primary mb-4">
-      {icon}
-    </div>
-    <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">{title}</h3>
-    <p className="text-gray-600 dark:text-gray-400 mb-4">{description}</p>
-    <button className="btn bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark focus:outline-none mt-auto">Learn More</button>
-  </div>
-);
+const featuresData = [
+  {
+    title: "Assignment Creation",
+    description:
+      "Easily create and share assignments with groups, set deadlines, and track progress effectively.",
+  },
+  {
+    title: "Collaborative Grading",
+    description:
+      "Simplify reviewing and grading submissions with peer collaboration and constructive feedback.",
+  },
+  {
+    title: "User-friendly Interface",
+    description:
+      "Experience a clean, intuitive platform designed to make assignment management seamless.",
+  },
+  {
+    title: "Real-time Updates",
+    description:
+      "Get instant notifications on submissions, feedback, and important activities without delays.",
+  },
+];
 
-// Main Features Section Component
-const Features = ({ theme }) => {
+export default function Features() {
   return (
-    <section className={`py-16 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-50 text-black"}`}>
-      <div className="max-w-screen-xl mx-auto px-4 text-center">
-        <h2 className="text-4xl font-bold mb-12">Key Features</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <FeatureCard
-            title="Easy Assignment Creation"
-            description="Create assignments effortlessly with our user-friendly interface."
-            icon={<i className="fas fa-pencil-alt"></i>}
-          />
-          <FeatureCard
-            title="Real-time Updates"
-            description="Receive notifications and updates instantly."
-            icon={<i className="fas fa-bell"></i>}
-          />
-          <FeatureCard
-            title="Secure Authentication"
-            description="Log in securely with our JWT-based authentication."
-            icon={<i className="fas fa-lock"></i>}
-          />
-          <FeatureCard
-            title="Responsive Design"
-            description="Enjoy a seamless experience across all devices."
-            icon={<i className="fas fa-mobile-alt"></i>}
-          />
-        </div>
+    <section className="py-20 px-6 md:px-12 bg-white">
+      {/* Section Heading */}
+      <div className="max-w-6xl mx-auto text-center mb-16">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+          🚀 Key Features
+        </h2>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          Powerful tools designed to enhance your group study experience with simplicity and efficiency.
+        </p>
+      </div>
+
+      {/* Features Grid */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+        {featuresData.map((feature, index) => (
+          <div
+            key={index}
+            className="p-8 bg-gray-50 border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition cursor-pointer"
+          >
+            <div className="flex items-center mb-4">
+              <div className="bg-green-100 text-green-600 p-2 rounded-full text-xl">
+                ✅
+              </div>
+            </div>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-3">
+              {feature.title}
+            </h3>
+            <p className="text-gray-600 text-md leading-relaxed">
+              {feature.description}
+            </p>
+          </div>
+        ))}
       </div>
     </section>
   );
-};
-
-export default Features;
+}

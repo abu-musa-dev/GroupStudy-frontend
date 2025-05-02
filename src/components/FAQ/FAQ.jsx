@@ -57,7 +57,7 @@ const FAQ = ({ theme }) => {
         theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-100 text-black"
       }`}
     >
-      <div className="max-w-screen-xl mx-auto px-4 text-center">
+      <div className="max-w-screen-xl  mx-auto px-4 text-center">
         <h2 className="text-3xl font-bold mb-12">Frequently Asked Questions</h2>
         <div className="space-y-6">
           {faqs.map((faq, index) => (

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Navbar from '../Navbar/Navbar';
-import { auth, provider, signInWithPopup, signOut } from '../../firebase';
+import { auth } from '../../firebase';
 import Swal from 'sweetalert2';
 
 const CreateAssignment = () => {
@@ -11,29 +11,10 @@ const CreateAssignment = () => {
   const [marks, setMarks] = useState('');
   const [thumbnail, setThumbnail] = useState('');
   const [difficulty, setDifficulty] = useState('');
-  const [dueDate, setDueDate] = useState(null);  // Only declare this once
+  const [dueDate, setDueDate] = useState(null);
   const [creatorEmail, setCreatorEmail] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Handle Google login
-  const handleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      setCreatorEmail(user.email);  // Store user's email after successful login
-    } catch (error) {
-      console.error('Error signing in:', error);
-    }
-  };
-
-  // Handle sign out
-  const handleLogout = async () => {
-    await signOut(auth);
-    setCreatorEmail('');
-  };
-
-  // Automatically attempt login on component mount (optional)
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -46,55 +27,58 @@ const CreateAssignment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation
     if (!title || !description || !marks || !thumbnail || !difficulty || !dueDate || !creatorEmail) {
-      Swal.fire({
+      return Swal.fire({
         icon: 'error',
         title: 'Validation Error',
-        text: 'All fields are required!',
+        text: 'Please fill in all fields!',
       });
-      return;
     }
 
-    // Validate marks: must be a positive number
     if (marks <= 0 || isNaN(marks)) {
-      Swal.fire({
+      return Swal.fire({
         icon: 'error',
         title: 'Invalid Marks',
-        text: 'Marks should be a positive number!',
+        text: 'Marks must be a positive number!',
       });
-      return;
     }
 
-    // Validate difficulty level: it must be one of the valid options
     const validDifficulties = ['easy', 'medium', 'hard'];
     if (!validDifficulties.includes(difficulty.toLowerCase())) {
-      Swal.fire({
+      return Swal.fire({
         icon: 'error',
-        title: 'Invalid Difficulty Level',
-        text: 'Please select a valid difficulty level (easy, medium, or hard).',
+        title: 'Invalid Difficulty',
+        text: 'Difficulty must be easy, medium, or hard.',
       });
-      return;
     }
 
-    // Create new assignment
     const newAssignment = {
       title,
       description,
-      marks: parseInt(marks, 10),
+      marks: parseInt(marks),
       thumbnail,
       difficulty,
       dueDate: dueDate.toISOString(),
       creatorEmail,
     };
 
-    setIsSubmitting(true);
+    // Get JWT token from localStorage
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Unauthorized',
+        text: 'You must be logged in to create an assignment!',
+      });
+    }
 
+    setIsSubmitting(true);
     try {
-      const response = await fetch('http://localhost:5000/api/assignments', {
+      const response = await fetch('http://localhost:5000/assignments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Send JWT token here
         },
         body: JSON.stringify(newAssignment),
       });
@@ -104,13 +88,9 @@ const CreateAssignment = () => {
       if (response.ok) {
         Swal.fire({
           icon: 'success',
-          title: 'Assignment Created',
-          text: 'Assignment created successfully!',
+          title: 'Success!',
+          text: 'Assignment created successfully.',
         });
-        setSuccessMessage('Assignment created successfully!');
-        setTimeout(() => setSuccessMessage(''), 3000);
-
-        // Clear form fields
         setTitle('');
         setDescription('');
         setMarks('');
@@ -120,16 +100,15 @@ const CreateAssignment = () => {
       } else {
         Swal.fire({
           icon: 'error',
-          title: 'Error',
-          text: data.message || 'Something went wrong!',
+          title: 'Failed',
+          text: data.message || 'An error occurred.',
         });
       }
-    } catch (error) {
-      console.error('Error submitting assignment:', error);
+    } catch (err) {
       Swal.fire({
         icon: 'error',
-        title: 'Submission Error',
-        text: 'Something went wrong!',
+        title: 'Network Error',
+        text: 'Something went wrong. Try again later.',
       });
     } finally {
       setIsSubmitting(false);
@@ -137,91 +116,123 @@ const CreateAssignment = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="p-6 max-w-3xl mx-auto bg-white shadow-md rounded-md">
-        <h1 className="text-2xl font-semibold text-gray-700 mb-4">Create Assignment</h1>
-
-        {successMessage && (
-          <div className="bg-green-100 text-green-800 p-4 rounded-md mb-4">
-            {successMessage}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="mt-6">
-          <div className="mb-4">
-            <label className="block text-gray-600 font-medium mb-2">Title:</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-600 font-medium mb-2">Description:</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows="4"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            ></textarea>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-600 font-medium mb-2">Marks:</label>
-            <input
-              type="number"
-              value={marks}
-              onChange={(e) => setMarks(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-600 font-medium mb-2">Thumbnail Image URL:</label>
-            <input
-              type="text"
-              value={thumbnail}
-              onChange={(e) => setThumbnail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-600 font-medium mb-2">Difficulty Level:</label>
-            <select
-              value={difficulty}
-              onChange={(e) => setDifficulty(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select Difficulty</option>
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-600 font-medium mb-2">Due Date:</label>
-            <DatePicker
-              selected={dueDate}
-              onChange={(date) => setDueDate(date)}
-              dateFormat="yyyy/MM/dd"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholderText="Select a date"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`bg-blue-500 text-white px-6 py-2 rounded-md ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'} transition`}
-          >
-            {isSubmitting ? 'Creating...' : 'Create Assignment'}
-          </button>
-        </form>
+      <div className="w-full max-w-4xl mx-auto mt-10 px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1A685B] mb-8 text-center"> Create New Assignment</h2>
+  
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block font-medium text-[#1A685B] mb-1">Title</label>
+              <input
+                type="text"
+                placeholder="Enter assignment title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-[#1A685B] outline-none"
+              />
+            </div>
+  
+            <div>
+              <label className="block font-medium text-[#1A685B] mb-1">Description</label>
+              <textarea
+                rows={4}
+                placeholder="Enter assignment description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-[#1A685B] outline-none"
+              ></textarea>
+            </div>
+  
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label className="block font-medium text-[#1A685B] mb-1">Marks</label>
+                <input
+                  type="number"
+                  placeholder="e.g. 100"
+                  value={marks}
+                  onChange={(e) => setMarks(e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-[#1A685B] outline-none"
+                />
+              </div>
+              <div>
+                <label className="block font-medium text-[#1A685B] mb-1">Thumbnail URL</label>
+                <input
+                  type="text"
+                  placeholder="https://image-link.com"
+                  value={thumbnail}
+                  onChange={(e) => setThumbnail(e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-[#1A685B] outline-none"
+                />
+                {thumbnail && (
+                  <img
+                    src={thumbnail}
+                    alt="Thumbnail Preview"
+                    className="mt-2 w-full h-32 object-cover rounded-lg border"
+                  />
+                )}
+              </div>
+            </div>
+  
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label className="block font-medium text-[#1A685B] mb-1">Difficulty</label>
+                <select
+                  value={difficulty}
+                  onChange={(e) => setDifficulty(e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-[#1A685B] outline-none"
+                >
+                  <option value="">Select Difficulty</option>
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
+              </div>
+              <div>
+                <label className="block font-medium text-[#1A685B] mb-1">Due Date</label>
+                <DatePicker
+                  selected={dueDate}
+                  onChange={(date) => setDueDate(date)}
+                  dateFormat="yyyy/MM/dd"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-[#1A685B] outline-none"
+                  placeholderText="Select a due date"
+                />
+              </div>
+            </div>
+  
+            <div className="flex justify-end pt-4">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`flex items-center gap-2 bg-[#1A685B] text-white font-semibold px-6 py-2 rounded-lg shadow hover:bg-[#155247] transition duration-200 ${
+                  isSubmitting && 'opacity-50 cursor-not-allowed'
+                }`}
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                    Creating...
+                  </>
+                ) : (
+                  'Create Assignment'
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
