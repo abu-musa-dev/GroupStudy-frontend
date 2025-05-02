@@ -1,25 +1,37 @@
-# Online Group Study Web Application (Frontend)
+# Online Group Study Web Application
 
-This project is the frontend part of an Online Group Study web application built with React.js, utilizing various features such as user authentication, assignment management, and grading.
+The **Online Group Study Web Application** is a modern, dynamic, and fully responsive platform built to enhance group learning. It facilitates assignment management, grading, and collaborative student interactions with an emphasis on seamless user authentication and real-time feedback. The platform is designed to create a smooth learning experience for both students and evaluators.
 
-## Key Features:
-- **Responsive Design:** The website is fully responsive, working across mobile, tablet, and desktop.
-- **Authentication System:** Users can log in and register using email/password or via social logins (Google/GitHub).
-- **Create, Update, Delete Assignments:** Users can create new assignments, update them, and delete their own assignments.
-- **Assignment Submission:** Students can submit assignments, and evaluators can grade them.
-- **Pending Assignments:** View and grade pending assignments submitted by others.
-- **Theme Toggle:** Toggle between light and dark themes.
-- **JWT Authentication:** Secure the application with JWT for private routes.
+## Live Site:
+[Online Group Study Web Application](https://groupstudy-web.netlify.app/)  
+**Backend Repository**: [GroupStudy-backend](https://github.com/abu-musa-dev/GroupStudy-backend)
 
-## Technologies Used:
-- **React.js** for building the UI.
-- **Firebase Authentication** for login and registration.
-- **React Router** for navigation.
-- **React-Redux** for state management.
-- **Axios** for API calls.
-- **React-Datepicker** for assignment due date.
-- **React-Toastify** for success/error messages.
-- **React-Modal** for modals.
-- **Styled Components** for CSS-in-JS styling.
+🚀 **Key Features**
+- **User Authentication**: Secure login and registration using Firebase Authentication with support for email/password and social logins (Google/GitHub).
+- **Assignment Management**: Easily create, update, delete, and submit assignments. Both students and evaluators can manage assignment statuses efficiently.
+- **Grading System**: Students can submit assignments, and evaluators can grade them. It supports real-time feedback for a seamless evaluation process.
+- **Theme Toggle**: Offers a smooth theme toggle between light and dark modes, ensuring an optimized user experience.
+- **Responsive UI**: Fully responsive, optimized for mobile, tablet, and desktop devices, ensuring a smooth experience across all screen sizes.
+- **JWT Authentication**: Secure private route access using JWT, ensuring only authenticated users can view specific sections of the app.
 
-"# GroupStudy-frontend-" 
+## Getting Started
+1. Visit the live site: [Online Group Study Web Application](https://groupstudy-web.netlify.app/)
+2. Sign up or log in to access personalized features (such as creating, managing, and submitting assignments).
+3. Create and manage assignments, and track your progress.
+4. Grade assignments submitted by others and receive real-time feedback.
+5. Customize your experience by switching between light and dark themes.
+
+## Tech Stack
+- **Frontend**: Built with **React.js** and **Styled Components** for UI design and **React Router DOM** for navigation.
+- **Authentication**: **Firebase Authentication** for secure login and registration.
+- **State Management**: Managed with **React-Redux**, ensuring a smooth interaction between components.
+- **API Calls**: **Axios** is used for seamless communication with the backend API.
+- **Backend**: Developed using **Node.js**, **Express.js**, and **MongoDB** to handle all server-side functionality and data persistence.
+- **Hosting**: **Netlify** for frontend deployment, **Vercel** for backend hosting.
+- **Version Control**: **Git** & **GitHub** for version control and collaboration.
+
+## Installation & Setup
+To run the project locally:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/abu-musa-dev/GroupStudy-frontend.git
