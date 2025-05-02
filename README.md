@@ -2,12 +2,10 @@
 
 The **Online Group Study Web Application** is a modern, dynamic, and fully responsive platform built to enhance group learning. It facilitates assignment management, grading, and collaborative student interactions with an emphasis on seamless user authentication and real-time feedback. The platform is designed to create a smooth learning experience for both students and evaluators.
 
-## Live Site:
-[Online Group Study Web Application](https://groupstudy-web.netlify.app/)  
-**Backend Repository**: [GroupStudy-backend](https://github.com/abu-musa-dev/GroupStudy-backend)
+**Live Site**: [Group Study Web Application](https://groupstudy-web.netlify.app/) &nbsp;&nbsp;|&nbsp;&nbsp;  **Backend Repository**: [GroupStudy-backend](https://github.com/abu-musa-dev/GroupStudy-backend)
 
 🚀 **Key Features**
-- **User Authentication**: Secure login and registration using Firebase Authentication with support for email/password and social logins (Google/GitHub).
+- **User Authentication**: Secure login and registration using **Firebase Authentication** with support for email/password and social logins (Google/GitHub).
 - **Assignment Management**: Easily create, update, delete, and submit assignments. Both students and evaluators can manage assignment statuses efficiently.
 - **Grading System**: Students can submit assignments, and evaluators can grade them. It supports real-time feedback for a seamless evaluation process.
 - **Theme Toggle**: Offers a smooth theme toggle between light and dark modes, ensuring an optimized user experience.
