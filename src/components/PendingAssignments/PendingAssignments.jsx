@@ -20,7 +20,7 @@ const PendingAssignments = () => {
 
     setLoading(true);
     // Fetch pending assignments with Authorization header
-    fetch(`http://localhost:5000/submissions?status=pending`, {
+    fetch(`https://group-study-backend-rho.vercel.app/submissions?status=pending`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +68,7 @@ const PendingAssignments = () => {
     };
 
     // PUT request to update the assignment with JWT token in header
-    fetch(`http://localhost:5000/submissions/${selectedAssignment._id}`, {
+    fetch(`https://group-study-backend-rho.vercel.app/submissions/${selectedAssignment._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

@@ -13,7 +13,7 @@ const MyAttemptedAssignments = () => {
   useEffect(() => {
     if (currentUserEmail) {
       setLoading(true);
-      fetch(`http://localhost:5000/submissions?email=${currentUserEmail}`)
+      fetch(`https://group-study-backend-rho.vercel.app/submissions?email=${currentUserEmail}`)
         .then((response) => response.json())
         .then((data) => {
           setSubmissions(data);

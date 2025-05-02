@@ -28,7 +28,7 @@ const Assignments = () => {
     // Get the JWT token from localStorage
     const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:5000/assignments?${query.toString()}`, {
+    fetch(`https://group-study-backend-rho.vercel.app/assignments?${query.toString()}`, {
       headers: {
         "Authorization": `Bearer ${token}`,
       },
@@ -64,7 +64,7 @@ const Assignments = () => {
   const confirmDelete = () => {
     const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:5000/assignments/${assignmentToDelete}`, {
+    fetch(`https://group-study-backend-rho.vercel.app/assignments/${assignmentToDelete}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -12,7 +12,7 @@ const ViewAssignment = () => {
   // Fetch the assignment details by ID
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/assignments/${id}`)
+      .get(`https://group-study-backend-rho.vercel.app/assignments/${id}`)
       .then((response) => {
         setAssignment(response.data);
       })

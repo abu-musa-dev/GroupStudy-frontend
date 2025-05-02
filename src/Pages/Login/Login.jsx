@@ -26,7 +26,7 @@ const Login = () => {
   // ✅ Function to fetch and store JWT
   const getJWTAndNavigate = async (userEmail) => {
     try {
-      const res = await fetch("http://localhost:5000/jwt", {
+      const res = await fetch("https://group-study-backend-rho.vercel.app/jwt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: userEmail }),
